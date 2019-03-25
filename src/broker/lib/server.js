@@ -10,7 +10,7 @@ const route = require("koa-route");
 const koaBody = require("koa-body");
 const compress = require("koa-compress");
 const log = require("./log");
-const Client = require("./client");
+const WebSocketClient = require("./websocket-client");
 const Emitter = require("./emitter");
 
 const HEADER_TOKEN_NAME = "homebus-token";
@@ -91,7 +91,7 @@ class Server extends Emitter {
 
     _onClient(ws, request) {
         const queueName = request.url.replace(/\//g, "");
-        const client = new Client(ws, queueName);
+        const client = new WebSocketClient(ws, queueName);
 
         this.emit("clientConnected", client);
 

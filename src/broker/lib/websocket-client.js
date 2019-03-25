@@ -2,7 +2,7 @@
 
 const { v4: uuid } = require("uuid");
 
-class Client {
+class WebSocketClient {
     constructor(ws, name) {
         this.ws = ws;
         this.id = name || uuid();
@@ -22,4 +22,4 @@ class Client {
     }
 }
 
-module.exports = Client;
+module.exports = WebSocketClient;

@@ -31,23 +31,27 @@ class Client {
         };
     }
 
-    async send(type, data, reactionTo) {
-        const id = uuid();
+    async sendRaw(message) {
+        const response = await this.axios.post(this.url, message);
 
-        const response = await this.axios.post(this.url, {
+        assert(response.status === 200, response.data);
+    }
+
+    async send(type, data, reactionTo) {
+        const message = {
             head: {
-                id,
+                id: uuid(),
                 version: 1,
                 time: new Date().toISOString(),
                 type,
                 reactionTo
             },
             data
-        });
+        };
 
-        assert(response.status === 200, response.data);
+        await this.sendRaw(message);
 
-        return id;
+        return message.head.id;
     }
 
     async registerListener(fn) {

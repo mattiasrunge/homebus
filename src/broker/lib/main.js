@@ -2,6 +2,7 @@
 
 const Server = require("./server");
 const Queues = require("./queues");
+const BrokerClient = require("./broker-client");
 
 class Main {
     constructor(opts) {
@@ -16,6 +17,14 @@ class Main {
         this.server.on("clientDisconnected", this.queues.onClientDisconnected);
 
         await this.queues.start();
+
+        for (const [ name, uri ] of Object.entries(this.opts.remotes || {})) {
+            const client = new BrokerClient(uri, name);
+            await this.queues.onClientConnected(client);
+
+            // TODO: Implement support for batch sending at intervals (cron)
+        }
+
         await this.server.start();
     }
 

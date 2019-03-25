@@ -10,10 +10,12 @@
   "engines": {
     "node": ">= 11.12.0"
   },
-  "workspaces": [
-    "broker",
-    "client"
-  ],
+  "workspaces": {
+    "packages": [
+      "client",
+      "broker"
+    ]
+  },
   "scripts": {
     "test": "jest",
     "lint": "eslint ."
