@@ -1,0 +1,9 @@
+{
+  "name": "myBroker",
+  "port": 23230,
+  "queuesPath": "/var/homebus/queues",
+  "tokens": [ "myToken" ],
+  "remotes": {
+    "myOtherBroker": "http://anotherToken@myotherbrokerhost:23230"
+  }
+}

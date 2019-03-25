@@ -9,8 +9,12 @@
   "engines": {
     "node": ">= 11.12.0"
   },
+  "scripts": {
+    "start": "node ."
+  },
   "dependencies": {
     "@homebus/client": "*",
+    "errno": "^0.1.7",
     "fs-extra": "^7.0.1",
     "koa": "^2.7.0",
     "koa-body": "^4.1.0",
@@ -19,6 +23,7 @@
     "koa-route": "^3.2.0",
     "koa2-cors": "^2.0.6",
     "uuid": "^3.3.2",
-    "ws": "^6.2.0"
+    "ws": "^6.2.0",
+    "yargs": "^13.2.2"
   }
 }
