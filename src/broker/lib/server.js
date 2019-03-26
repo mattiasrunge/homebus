@@ -49,6 +49,8 @@ class Server extends Emitter {
         this.wss.on("connection", this._onClient);
 
         this.server.listen(this.opts.port);
+
+        log.info(`Listening for requests on port ${this.opts.port}`);
     }
 
     async _onRequest(ctx) {

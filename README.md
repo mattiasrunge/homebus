@@ -19,8 +19,7 @@ A simple bus implementation for M2M. Not intended to be the fastest but to imple
         version: 1,
         time: "2019-03-22T16:37:33Z",
         type: "",
-        reactionTo: "3e0b15f8-4d3e-11e9-bf4a-0b27bb8976c4",
-
+        reactionTo: "3e0b15f8-4d3e-11e9-bf4a-0b27bb8976c4"
     },
     brokers: [
         {

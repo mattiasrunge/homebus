@@ -1,0 +1,20 @@
+{
+  "name": "@homebus/printer",
+  "version": "1.0.0",
+  "description": "A simple HomeBus client which prints all messages to stdout",
+  "main": "index.js",
+  "repository": "git@github.com:mattiasrunge/homebus.git",
+  "author": "Mattias Runge-Broberg <mattias@runge.se>",
+  "license": "MIT",
+  "engines": {
+    "node": ">= 11.12.0"
+  },
+  "scripts": {
+    "start": "node ."
+  },
+  "dependencies": {
+    "@homebus/client": "*",
+    "prettyjson": "^1.2.1",
+    "yargs": "^13.2.2"
+  }
+}
