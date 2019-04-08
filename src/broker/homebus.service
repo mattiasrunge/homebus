@@ -1,0 +1,12 @@
+[Unit]
+Description=A simple bus implementation for M2M. Not intended to be the fastest but to implement a set of features and be simple to use and setup.
+After=network.target
+
+[Service]
+Type=simple
+User=$USER
+ExecStart=$NODE $PWD/index.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

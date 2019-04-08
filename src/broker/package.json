@@ -10,10 +10,13 @@
     "node": ">= 11.12.0"
   },
   "scripts": {
-    "start": "node ."
+    "start": "node .",
+    "service_file": "sed 's/$USER/'\"$USER\"'/g' homebus.service | sed 's@$PWD@'\"$PWD\"'@g' | sed 's@$NODE@'\"$(which node)\"'@g' | sudo tee /lib/systemd/system/homebus.service",
+    "service": "yarn service_file && sudo systemctl daemon-reload && sudo systemctl enable homebus"
   },
   "dependencies": {
     "@homebus/client": "*",
+    "cron": "^1.7.0",
     "errno": "^0.1.7",
     "fs-extra": "^7.0.1",
     "koa": "^2.7.0",
