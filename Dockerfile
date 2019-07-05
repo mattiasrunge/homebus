@@ -4,7 +4,7 @@ FROM node:12-stretch-slim
 WORKDIR /usr/src/app
 
 # Install app dependencies
-COPY src/package.json ./
+COPY src ./
 RUN yarn
 
 # Copy app source
