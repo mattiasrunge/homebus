@@ -5,7 +5,7 @@ After=network.target
 [Service]
 Type=simple
 User=$USER
-ExecStart=$NODE $PWD/index.js
+ExecStart=$NODE $PWD/index.js -c /etc/homebus.json
 Restart=on-failure
 
 [Install]
