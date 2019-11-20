@@ -13,7 +13,9 @@
   "workspaces": {
     "packages": [
       "client",
-      "broker"
+      "broker",
+      "printer",
+      "ikea"
     ]
   },
   "scripts": {

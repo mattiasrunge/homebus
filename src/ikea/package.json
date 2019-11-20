@@ -1,0 +1,20 @@
+{
+  "name": "@homebus/ikea",
+  "version": "1.0.0",
+  "description": "A HomeBus client which interfaces a IKEA Trådfri Gateway",
+  "main": "index.js",
+  "repository": "git@github.com:mattiasrunge/homebus.git",
+  "author": "Mattias Runge-Broberg <mattias@runge.se>",
+  "license": "MIT",
+  "engines": {
+    "node": ">= 11.12.0"
+  },
+  "scripts": {
+    "start": "node ."
+  },
+  "dependencies": {
+    "@homebus/client": "*",
+    "node-tradfri-client": "^2.0.1",
+    "yargs": "^13.2.2"
+  }
+}

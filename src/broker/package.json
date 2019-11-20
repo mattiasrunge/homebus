@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "@homebus/client": "*",
-    "cron": "^1.7.2",
     "errno": "^0.1.7",
     "fs-extra": "^8.1.0",
     "koa": "^2.11.0",
