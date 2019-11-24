@@ -18,15 +18,18 @@ class Gateway extends EventEmitter {
         await this.tradfri.observeDevices();
     }
 
-    broadcastState(device) {
-        // TODO: messageId will be wrong, we set brightness, color and state and will get three messages if all change values...
-        const messageId = this.pending[device.instanceId];
+    broadcastState(id, messageId) {
+        const device = this.lights[id];
 
-        delete this.pending[device.instanceId];
+        assert(device, `No device with id ${id} found`);
+
+        // TODO: messageId will be wrong, we set brightness, color and state and will get three messages if all change values...
+        messageId = messageId || this.pending[id];
+        delete this.pending[id];
 
         this.emit("light-state", {
             messageId,
-            id: device.instanceId,
+            id,
             state: device.lightList[0].onOff ? "on" : "off",
             brightness: device.lightList[0].dimmer,
             color: device.lightList[0].color,
@@ -41,7 +44,7 @@ class Gateway extends EventEmitter {
             if (device.type === AccessoryTypes.lightbulb) {
                 this.lights[device.instanceId] = device;
 
-                this.broadcastState(device);
+                this.broadcastState(device.instanceId);
             }
         });
 

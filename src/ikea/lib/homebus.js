@@ -21,7 +21,7 @@ class Homebus extends EventEmitter {
                     id: message.data.id
                 });
             } else if (message.head.type === LIGHT_SET_STATE) {
-                this.emit("light-get-state", {
+                this.emit("light-set-state", {
                     messageId: message.head.id,
                     id: message.data.id,
                     state: message.data.state,

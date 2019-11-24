@@ -2,6 +2,7 @@
 
 const assert = require("assert");
 const http = require("http");
+const { v4: uuid } = require("uuid");
 const WebSocket = require("ws");
 const Koa = require("koa");
 const koaJson = require("koa-json");
@@ -81,10 +82,17 @@ class Server extends Emitter {
     }
 
     async _processMessage(message) {
+        assert(typeof message.head === "object", "Missing head from message");
+
+        const time = new Date().toISOString();
+
         message.brokers = message.brokers || [];
+        message.head.id = message.head.id || uuid();
+        message.head.time = message.head.time || time;
+        message.data = message.data || {};
 
         message.brokers.push({
-            time: new Date().toISOString(),
+            time,
             name: this.opts.name
         });
 
@@ -96,6 +104,16 @@ class Server extends Emitter {
         const client = new WebSocketClient(ws, queueName);
 
         this.emit("clientConnected", client);
+
+        ws.on("message", async (data) => {
+            try {
+                const message = JSON.parse(data.toString());
+
+                await this._processMessage(message);
+            } catch (error) {
+                log.error("Failed to handle message", error, data.toString());
+            }
+        });
 
         ws.on("close", () => {
             this.emit("clientDisconnected", client);
