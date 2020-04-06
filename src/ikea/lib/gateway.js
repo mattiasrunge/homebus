@@ -41,10 +41,14 @@ class Gateway extends EventEmitter {
 
     _registerEventHandlers() {
         this.tradfri.on("device updated", (device) => {
-            if (device.type === AccessoryTypes.lightbulb) {
-                this.lights[device.instanceId] = device;
+            try {
+                if (device.type === AccessoryTypes.lightbulb) {
+                    this.lights[device.instanceId] = device;
 
-                this.broadcastState(device.instanceId);
+                    this.broadcastState(device.instanceId);
+                }
+            } catch (error) {
+                console.error(error);
             }
         });
 
@@ -54,13 +58,14 @@ class Gateway extends EventEmitter {
             // TODO: Broadcast
         });
 
-        // .on("group updated", (group) => {
-        //     console.log("group updated");
-        //     console.dir(group);
-        // })
-        // .on("group removed", (instanceId) => {
-        //     console.log("group removed", instanceId);
-        // });
+        this.tradfri.on("group updated", (group) => {
+            console.log("group updated");
+            console.dir(group);
+        });
+
+        this.tradfri.on("group removed", (instanceId) => {
+            console.log("group removed", instanceId);
+        });
     }
 
     async _connect(securityKey) {
@@ -87,20 +92,20 @@ class Gateway extends EventEmitter {
         const light = this.lights[id].lightList[0];
 
         if (typeof brightness !== "undefined") {
-            light.setBrightness(brightness);
+            await light.setBrightness(brightness);
         }
 
         if (typeof color !== "undefined") {
-            light.setColor(color);
+            await light.setColor(color);
         }
 
         if (typeof state !== "undefined") {
             if (state === "on") {
-                light.turnOn();
+                await light.turnOn();
             } else if (state === "off") {
-                light.turnOff();
+                await light.turnOff();
             } else if (state === "toggle") {
-                light.toggle();
+                await light.toggle();
             }
         }
     }
