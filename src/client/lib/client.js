@@ -59,10 +59,21 @@ class Client {
             headers: this.headers
         });
 
+        let connecting = true;
+
         ws.on("message", (message) => fn(JSON.parse(message)));
         ws.on("close", () => fn(false));
 
-        await new Promise((resolve) => ws.on("open", resolve));
+        await new Promise((resolve) => {
+            ws.on("error", (error) => {
+                console.error("error", error);
+                connecting && resolve();
+            });
+
+            ws.on("open", resolve);
+        });
+
+        connecting = false;
 
         return ws;
     }
