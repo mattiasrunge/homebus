@@ -10,6 +10,7 @@ const cors = require("koa2-cors");
 const route = require("koa-route");
 const koaBody = require("koa-body");
 const compress = require("koa-compress");
+const dot = require("dot-object");
 const log = require("./log");
 const WebSocketClient = require("./websocket-client");
 const Emitter = require("./emitter");
@@ -26,7 +27,8 @@ class Server extends Emitter {
         assert(this.opts.port, "A port must be specified for the broker interface");
         assert(this.opts.name, "A name must be specified for the broker");
 
-        this._onRequest = this._onRequest.bind(this);
+        this._onPostRequest = this._onPostRequest.bind(this);
+        this._onGetRequest = this._onGetRequest.bind(this);
         this._onClient = this._onClient.bind(this);
         this._onVerifyClient = this._onVerifyClient.bind(this);
     }
@@ -44,7 +46,8 @@ class Server extends Emitter {
         app.use(cors());
         app.use(koaJson());
 
-        app.use(route.post("*", this._onRequest));
+        app.use(route.post("*", this._onPostRequest));
+        app.use(route.get("*", this._onGetRequest));
 
         this.server.on("request", app.callback());
         this.wss.on("connection", this._onClient);
@@ -54,7 +57,45 @@ class Server extends Emitter {
         log.info(`Listening for requests on port ${this.opts.port}`);
     }
 
-    async _onRequest(ctx) {
+    async _onGetRequest(ctx) {
+        const headers = ctx.headers;
+        let body = ctx.request.query;
+
+        for (const key of Object.keys(body)) {
+            if (key.endsWith("[]")) {
+                body[key.slice(0, -2)] = body[key];
+                delete body[key];
+            }
+        }
+
+        body = dot.object(body);
+
+        console.log("get body", body)
+
+        if (!this._verifyToken(headers[HEADER_TOKEN_NAME])) {
+            ctx.body = "Invalid or missing token header";
+            ctx.status = 401;
+            ctx.type = "plain/text";
+
+            return;
+        }
+
+        try {
+            await this._processMessage(body);
+
+            ctx.body = "Message accepted";
+            ctx.status = 200;
+            ctx.type = "plain/text";
+        } catch (error) {
+            log.error("Failed to handle request", error, body);
+
+            ctx.body = "Failed to accept message";
+            ctx.status = error.status || 500;
+            ctx.type = "plain/text";
+        }
+    }
+
+    async _onPostRequest(ctx) {
         const headers = ctx.headers;
         const body = ctx.request.body;
 
